@@ -1,9 +1,9 @@
 package application.controller;
 
 import application.entity.Supplier;
-import application.model.ProductDTO;
 import application.model.SupplierDTO;
 import application.model.request.SupplierCreationRequest;
+import application.model.request.SupplierSearchRequest;
 import application.model.request.SupplierUpdateRequest;
 import application.model.response.APIResponse;
 import application.model.response.PageResponse;
@@ -60,8 +60,8 @@ public class SupplierAPI {
     }
 
     @GetMapping("/supplier/search")
-    APIResponse<List<SupplierDTO>> getAllSupplier(SupplierDTO supplierDTO){
-        List<SupplierDTO> productDTOS = service.getSuppliers2(supplierDTO);
+    APIResponse<List<SupplierDTO>> searchSuppliers(SupplierSearchRequest request){
+        List<SupplierDTO> productDTOS = service.getSuppliers2(request);
         APIResponse<List<SupplierDTO>> api = new APIResponse<>();
         if(productDTOS.isEmpty()){
             api.setCode("1002");

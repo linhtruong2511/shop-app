@@ -71,18 +71,10 @@ public class ProductServiceImpl implements ProductService{
 
 	@Override
 	public ProductDTO updateProduct(ProductUpdateRequest request, Long id) {
-		Product product = productRepository.findById(id).orElseThrow(
-				() -> {return  new ProductNotFoundException("Product not found");
-				}
-		);
-
-
-
-
-//		Product product = mapper.map(request, Product.class);
-//		Product entity = productRepository.updateProduct(product, id);
-//		ProductDTO dto = mapper.map(entity, ProductDTO.class);
-//		return dto;
+		Product product = mapper.map(request, Product.class);
+		Product entity = productRepository.updateProduct(product, id);
+		ProductDTO dto = mapper.map(entity, ProductDTO.class);
+		return dto;
 	}
 
 	@Override

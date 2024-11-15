@@ -13,7 +13,7 @@ public class OrderConvert {
         return OrderSearchRequest.builder()
                 .customerID(MapUtil.toObj("customerID", Long.class, params))
                 .status(OrderEnum.getStatusByValue(MapUtil.toObj("status", String.class, params)))
-                .nameProduct(MapUtil.toObj("nameProduct", String.class, params))
+                .nameProduct(MapUtil.toObj("productName", String.class, params))
                 .build();
     }
 }

@@ -1,11 +1,10 @@
 package application.service.impl;
 
-import application.entity.Product;
 import application.entity.Supplier;
 import application.exception.SupplierNotFoundException;
-import application.model.ProductDTO;
 import application.model.SupplierDTO;
 import application.model.request.SupplierCreationRequest;
+import application.model.request.SupplierSearchRequest;
 import application.model.request.SupplierUpdateRequest;
 import application.model.response.PageResponse;
 import application.repository.SupplierRepository;
@@ -26,11 +25,11 @@ public class SupplierServiceImpl implements SupplierService {
     @Autowired
     ModelMapper mapper;
     @Override
-    public List<SupplierDTO> getSuppliers(SupplierDTO supplierDTO){
-        List<Supplier> suppliers = repository.findByNameContainingAndAddressContainingAndPhoneNumberContaining(
-                supplierDTO.getName(),
-                supplierDTO.getAddress(),
-                supplierDTO.getPhoneNumber()
+    public List<SupplierDTO> getSuppliers(SupplierSearchRequest request){
+        List<Supplier> suppliers = repository.findByNameContainingAndAddressContainingAndProductsNameContaining(
+                request.getName(),
+                request.getAddress(),
+                request.getProductName()
         );
         List<SupplierDTO> responseDTO = new ArrayList<>();
         for(Supplier item : suppliers){
@@ -40,11 +39,11 @@ public class SupplierServiceImpl implements SupplierService {
         return responseDTO;
     }
     @Override
-    public List<SupplierDTO> getSuppliers2(SupplierDTO supplierDTO){
+    public List<SupplierDTO> getSuppliers2(SupplierSearchRequest request){
         List<Supplier> suppliers = repository.findSuppliers(
-                supplierDTO.getName(),
-                supplierDTO.getAddress(),
-                supplierDTO.getPhoneNumber()
+                request.getName(),
+                request.getAddress(),
+                request.getProductName()
         );
         List<SupplierDTO> responseDTO = new ArrayList<>();
         for(Supplier item : suppliers){
