@@ -23,16 +23,13 @@ public class Orders {
 	@Enumerated(EnumType.STRING)
 	private OrderEnum orderStatus;
 	private Double totalAmount;
-
-	@ManyToOne
-	@JoinColumn(name = "customer_id")
-	@JsonBackReference
-	private Customer customer;
-
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "orders")
 	@JsonManagedReference
 	private List<OrderItem> orderItems;
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_id")
+	private User userID;
 	public String toString(){
 		return "order";
 	}

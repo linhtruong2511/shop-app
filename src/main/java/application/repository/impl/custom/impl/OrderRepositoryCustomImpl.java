@@ -1,17 +1,13 @@
 package application.repository.impl.custom.impl;
 
-import application.common.OrderEnum;
 import application.entity.Orders;
 import application.model.request.OrderSearchRequest;
 import application.repository.impl.custom.OrderRepositoryCustom;
-import org.hibernate.annotations.NaturalId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -32,9 +28,9 @@ public class OrderRepositoryCustomImpl implements OrderRepositoryCustom {
             sql.append("join order_item oi on oi.order_id = o.id " +
                     "join product p on p.id = oi.product_id ");
         }
-        sql.append("where 1 = 1 and ");
+        sql.append("where 1 = 1 ");
         if(request.getNameProduct() != null){
-            sql.append("p.name like '%" + request.getNameProduct() + "%' ");
+            sql.append("and p.name like '%" + request.getNameProduct() + "%' ");
         }
         if(request.getCustomerID() != null){
             sql.append("and o.customer_id = " + request.getCustomerID() + " ");

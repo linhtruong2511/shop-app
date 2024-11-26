@@ -1,4 +1,4 @@
-package application.model;
+package application.model.dto;
 
 import application.common.OrderEnum;
 import lombok.AllArgsConstructor;

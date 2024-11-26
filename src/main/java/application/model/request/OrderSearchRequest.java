@@ -1,7 +1,6 @@
 package application.model.request;
 
 import application.common.OrderEnum;
-import application.entity.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

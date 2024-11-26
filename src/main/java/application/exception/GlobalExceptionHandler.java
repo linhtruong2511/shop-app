@@ -33,10 +33,40 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ProductOutOfStock.class)
-    public ResponseEntity<ErrorResponse> handlerProductOutOfStock(ProductOutOfStock e){
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlerUserNotFoundException(UserNotFoundException e) {
+        ErrorResponse error = new ErrorResponse(e.getMessage(), e.getCode());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RoleNotExistsException.class)
+    public ResponseEntity<ErrorResponse> handlerRoleNotExistsException(RoleNotExistsException e) {
+        ErrorResponse error = new ErrorResponse(e.getMessage(), e.getCode());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handlerUsernameAlreadyExists(UsernameAlreadyExistsException e) {
+        ErrorResponse error = new ErrorResponse(e.getMessage(), e.getCode());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handlerEmailAlreadyExists(EmailAlreadyExistsException e) {
+        ErrorResponse error = new ErrorResponse(e.getMessage(), e.getCode());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ProductOutOfStockException.class)
+    public ResponseEntity<ErrorResponse> handlerProductOutOfStock(ProductOutOfStockException e){
         ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), e.getCode());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserDeletedException.class)
+    public ResponseEntity<ErrorResponse> handlerUserDeletedException(UserDeletedException e){
+        ErrorResponse errorResponse = new ErrorResponse(e.getMessage(), e.getCode());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_GATEWAY);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -44,6 +74,8 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(e.getBindingResult().getFieldError().getDefaultMessage(), 1003);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {

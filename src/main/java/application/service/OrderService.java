@@ -2,8 +2,7 @@ package application.service;
 
 import application.common.OrderEnum;
 import application.entity.Orders;
-import application.model.OrderDTO;
-import org.springframework.stereotype.Service;
+import application.model.dto.OrderDTO;
 
 import java.util.List;
 import java.util.Map;

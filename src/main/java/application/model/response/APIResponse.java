@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class APIResponse<T> {
-    private String code;
+    private String code = "1000";
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String error;
     @JsonInclude(JsonInclude.Include.NON_NULL)

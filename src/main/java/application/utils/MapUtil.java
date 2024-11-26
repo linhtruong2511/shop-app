@@ -25,7 +25,6 @@ public class MapUtil {
 				return tClass.cast(obj);
 
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
 				System.out.println("casting null");
 			}
 		}

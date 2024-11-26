@@ -1,7 +1,7 @@
 package application.controller;
 
 import application.entity.Orders;
-import application.model.OrderDTO;
+import application.model.dto.OrderDTO;
 import application.model.response.APIResponse;
 import application.model.response.OrderResponse;
 import application.common.OrderEnum;

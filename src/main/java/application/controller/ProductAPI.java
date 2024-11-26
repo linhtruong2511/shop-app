@@ -9,7 +9,7 @@ import application.model.request.ProductCreationRequest;
 import application.model.request.ProductUpdateRequest;
 import application.model.response.APIResponse;
 import application.model.response.PageResponse;
-import application.model.response.ProductResponse;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,15 +24,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import application.model.ProductDTO;
+import application.model.dto.ProductDTO;
 import application.service.ProductService;
 
 @RestController
 @Validated
+@AllArgsConstructor
 public class ProductAPI {
-    @Autowired
     ProductService service;
-
     @GetMapping(value = "/product/search")
     public APIResponse<List<ProductDTO>> getProducts(@RequestParam Map<String, String> params) {
         List<ProductDTO> productDTOS = service.getProducts(params);
@@ -53,16 +52,10 @@ public class ProductAPI {
                                                          @RequestParam(name = "size", defaultValue = "5") int size){
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         PageResponse<ProductDTO> pageResponse = service.getProductsWithPage(pageable);
-        APIResponse<PageResponse<ProductDTO>> api = new APIResponse<>();
-        if(pageResponse.getData().isEmpty()){
-            api.setError("product not found");
-            api.setCode("1005");
-        }
-        else{
-            api.setResult(pageResponse);
-            api.setCode("1000");
-        }
-        return api;
+        return APIResponse.<PageResponse<ProductDTO>>builder()
+                .result(pageResponse)
+                .code("1000")
+                .build();
     }
 
     @GetMapping(value = "/product/{id}")
@@ -87,19 +80,19 @@ public class ProductAPI {
     public APIResponse<ProductDTO> updateProduct(@RequestBody @Valid ProductUpdateRequest request,
                                                  @PathVariable Long id) {
         ProductDTO productResponse = service.updateProduct(request, id);
-        APIResponse<ProductDTO> api = new APIResponse<>();
-        api.setCode("1000");
-        api.setResult(productResponse);
-        return api;
+        return APIResponse.<ProductDTO>builder()
+                .result(productResponse)
+                .code("1000")
+                .build();
     }
 
     @DeleteMapping(value = "/product/{id}")
-    public APIResponse<String> deleteProduct(@PathVariable("id") Long[] id) {
+    public APIResponse<String> deleteProduct(@PathVariable("id") Long id) {
         service.deleteProduct(id);
-        APIResponse<String> api = new APIResponse<>();
-        api.setCode("1000");
-        api.setResult("delete success");
-        return api;
+        return APIResponse.<String>builder()
+                .result("DELETE SUCCESS")
+                .code("1000")
+                .build();
     }
 
 }
