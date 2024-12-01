@@ -1,7 +1,6 @@
 package application.common;
 
 import org.aspectj.weaver.ast.Or;
-import org.hibernate.criterion.Order;
 
 public enum OrderEnum {
     CHUA_XU_LY("CHUA_XU_LY"),

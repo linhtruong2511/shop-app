@@ -6,12 +6,12 @@ import application.model.request.UserCreationRequest;
 import application.model.request.UserUpdateRequest;
 import application.model.response.APIResponse;
 import application.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -3,12 +3,12 @@ package application.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
 
 import application.model.request.ProductCreationRequest;
 import application.model.request.ProductUpdateRequest;
 import application.model.response.APIResponse;
 import application.model.response.PageResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

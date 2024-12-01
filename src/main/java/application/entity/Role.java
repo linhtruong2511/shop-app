@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.modelmapper.internal.bytebuddy.asm.Advice;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
