@@ -11,8 +11,12 @@ import application.repository.UserRepository;
 import application.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.GenericDeclaration;
 import java.util.*;
 
 @Service
@@ -39,9 +43,13 @@ public class UserServiceImpl implements UserService {
         }
         User user = mapper.map(request, User.class);
         user.setRoles(roles);
+        user.setPassword(encodePassword(request.getPassword()));
         return userRepository.save(user);
     }
-
+    private String encodePassword(String password){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(15);
+        return encoder.encode(password);
+    }
     @Override
     public UserDTO getUser(Long userID) {
         User user = userRepository.findById(userID)

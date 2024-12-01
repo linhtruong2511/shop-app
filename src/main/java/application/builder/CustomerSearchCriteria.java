@@ -1,6 +1,5 @@
 package application.builder;
 
-import javax.persistence.Column;
 
 public class CustomerSearchCriteria {
 

@@ -9,11 +9,11 @@ import application.repository.OrderRepository;
 import application.repository.ProductRepository;
 import application.common.OrderEnum;
 import application.service.OrderService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
