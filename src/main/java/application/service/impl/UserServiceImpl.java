@@ -1,16 +1,24 @@
 package application.service.impl;
 
+import application.converter.UserConvert;
 import application.entity.Role;
 import application.entity.User;
 import application.exception.*;
 import application.model.dto.UserDTO;
+import application.model.dto.UserI;
+import application.model.request.SignUpUserRequest;
 import application.model.request.UserCreationRequest;
 import application.model.request.UserUpdateRequest;
 import application.repository.RoleRepository;
 import application.repository.UserRepository;
+import application.secutity.UserDetailsImpl;
 import application.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,106 +34,87 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     ModelMapper mapper;
     RoleRepository roleRepository;
+    PasswordEncoder passwordEncoder;
+    UserConvert userConvert;
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SUPER_ADMIN')")
     public User createUser(UserCreationRequest request) {
-        if(userRepository.existsByUsername(request.getUsername())){
-            throw new UsernameAlreadyExistsException("USER NAME IS ALREADY EXISTS");
-        }
-        else if(userRepository.existsByEmail(request.getEmail())){
-            throw new EmailAlreadyExistsException("EMAIL IS ALREADY EXISTS");
-        }
-        Set<Role> roles = new HashSet<>();
-        for(Long id : request.getRoleID()){
-            roles.add(roleRepository.findById(id).orElseThrow(
-                    () -> new RoleNotExistsException("ROLE IS NOT EXISTS")
-            ));
-        }
-        User user = mapper.map(request, User.class);
-        user.setRoles(roles);
-        user.setPassword(encodePassword(request.getPassword()));
+        checkExistedUser(request);
+        User user = userConvert.toUser(request);
         return userRepository.save(user);
     }
-    private String encodePassword(String password){
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(15);
-        return encoder.encode(password);
+
+    @PostAuthorize("returnObject.username == authentication.principal.username")
+    public User getMyInfo(){
+        var user = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = user.getUsername();
+        return userRepository.getUserByUsername(username);
     }
+
+    @Override
+    public User createUser(SignUpUserRequest request) {
+        checkExistedUser(request);
+        User user = userConvert.toUser(request);
+        return userRepository.save(user);
+    }
+
+    private void checkExistedUser(UserI request) {
+        // check user mới có trùng thông tin với các user cũ không
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new UsernameAlreadyExistsException("USER NAME IS ALREADY EXISTS");
+        } else if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException("EMAIL IS ALREADY EXISTS");
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_SUPER_ADMIN')")
     @Override
     public UserDTO getUser(Long userID) {
         User user = userRepository.findById(userID)
-                .orElseThrow(() -> new SupplierNotFoundException("Supplier not found"));
-        if(!user.isEnabled()){
+                .orElseThrow(() -> new UserNotFoundException("USER NOT FOUND"));
+        if (!user.isEnabled()) {
             throw new UserDeletedException("USER IS DELETED");
         }
-        UserDTO userDTO = mapper.map(user, UserDTO.class);
-        userDTO.setFullName(user.getFirstName() + " " + user.getLastName());
-        return userDTO;
+        return userConvert.toUserDTO(user);
     }
+
+
 
     @Override
     public List<UserDTO> getUsers(Map<String, String> params) {
         List<UserDTO> userDTOS = new ArrayList<>();
         List<User> users = userRepository.findByUsernameContaining(
                 params.getOrDefault("username", ""));
-        if(!users.isEmpty())
-            users.forEach(
-                    item -> {
-                        if(item.isEnabled()) {
-                                UserDTO userDTO = mapper.map(item, UserDTO.class);
-                                userDTO.setFullName(item.getFirstName() + " " + item.getLastName());
-                                userDTOS.add(userDTO);
-                            }
-                        }
-                    );
+        if (!users.isEmpty()) {
+            users.forEach(item -> userDTOS.add(userConvert.toUserDTO(item)));
+        }
         return userDTOS;
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     public UserDTO updateUser(UserUpdateRequest request, Long userID) {
         User user = userRepository.findById(userID).orElseThrow(
-                () ->  new UserNotFoundException("user not exists")
+                () -> new UserNotFoundException("user not exists")
         );
-        if(user.isEnabled()){
+        if (!user.isEnabled()) {
             throw new UserDeletedException("USER IS DELETED");
         }
-        mappingUser(user, request);
-        return mapper.map(userRepository.save(user), UserDTO.class);
+        user = userConvert.toUserUpdate(request, user);
+        userRepository.save(user);
+        return userConvert.toUserDTO(user);
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("USER NOT EXISTS"));
-        if(!user.isEnabled()){
+        if (!user.isEnabled()) {
             throw new UserDeletedException("USER IS DELETED");
         }
         user.setEnabled(false);
         userRepository.save(user);
-    }
-    private void mappingUser(User user, UserUpdateRequest request){
-        if(request.getPassword() != null){
-            user.setPassword(request.getPassword());
-        }
-        if(request.getPhoneNumber() != null){
-            user.setPhoneNumber(request.getPhoneNumber());
-        }
-        if(request.getAddress() != null){
-            user.setAddress(request.getAddress());
-        }
-        if(request.getDob() != null){
-            user.setDod(request.getDob());
-        }
-        if(request.getRoleIDs() != null && !request.getRoleIDs().isEmpty()){
-            user.getRoles().forEach(role ->
-                    role.getUsers().remove(user)
-                    );
-            user.getRoles().clear();
-            Set<Role> roles = new HashSet<>();
-            request.getRoleIDs().forEach(id ->
-                    roles.add(roleRepository.findById(id).orElseThrow(
-                            () -> new RoleNotExistsException("ROLE ID(" + id + ") NOT EXISTS")
-                    )));
-            user.setRoles(roles);
-        }
     }
 }

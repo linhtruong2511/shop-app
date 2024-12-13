@@ -23,5 +23,5 @@ public class ProductCreationRequest {
     @NotNull(message = "product stock quantity is not null")
     private Integer stockQuantity;
     private String description;
-    private List<Long> supplierIDs;
+    private String[] imageUrls;
 }
