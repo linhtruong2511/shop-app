@@ -22,7 +22,7 @@ import jakarta.persistence.*;
 @Getter
 public class Product {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
 	private String code;
@@ -30,10 +30,11 @@ public class Product {
 	private Integer stockQuantity = 0;
 	private String description;
 	private boolean enabled = true;
+	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY,
+			cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+	private List<Image> images = new ArrayList<>();
+	@JsonIgnore
 	@JsonBackReference
 	@ManyToMany(mappedBy = "products")
 	private Set<User> users = new HashSet<>();
-	public String toString(){
-		return "";
-	}
 }

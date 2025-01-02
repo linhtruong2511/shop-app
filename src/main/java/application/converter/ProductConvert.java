@@ -3,7 +3,7 @@ package application.converter;
 import java.util.Map;
 
 import application.builder.ProductSearchCriteria;
-import application.utils.MapUtil;
+import application.util.MapUtil;
 import org.springframework.stereotype.Component;
 
 @Component

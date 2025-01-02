@@ -3,9 +3,12 @@ package application.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Table;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 import jakarta.persistence.*;
+
+import java.lang.reflect.Member;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,8 +20,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "user")
 @Entity
+@Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -51,11 +54,11 @@ public class User {
     private boolean enabled = true;
     public boolean isSupplier(){
         for(Role role : roles){
-            if(role.getName().equals("SUPPLIER"))
+            if(role.getName().name().equals("SUPPLIER"))
                 return true;
         }
         return false;
     }
-    @OneToMany(mappedBy = "userID" ,fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userID" ,fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<Orders> orders = new ArrayList<>();
 }

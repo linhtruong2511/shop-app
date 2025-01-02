@@ -23,6 +23,13 @@ public class UserAPI {
     @Autowired
     UserService userService;
 
+    @GetMapping("/my-info")
+    APIResponse<?> getMyInfo(){
+        User user = userService.getMyInfo();
+        return APIResponse.<User>builder()
+                .result(user)
+                .build();
+    }
     @PostMapping
     APIResponse<User> createUser(@RequestBody @Valid UserCreationRequest request){
         return APIResponse.<User>builder()
@@ -32,8 +39,9 @@ public class UserAPI {
     @PutMapping("/{userID}")
     APIResponse<UserDTO> updateUser(@RequestBody UserUpdateRequest request,
                                     @PathVariable Long userID){
+        UserDTO user = userService.updateUser(request, userID);
         return APIResponse.<UserDTO>builder()
-                .result(userService.updateUser(request, userID))
+                .result(user)
                 .build();
     }
 

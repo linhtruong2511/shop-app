@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import application.builder.ProductSearchCriteria;
 import application.converter.ProductConvert;
+import application.entity.Image;
 import application.exception.ProductNotFoundException;
 import application.exception.SupplierNotFoundException;
 import application.model.request.ProductCreationRequest;
@@ -64,9 +65,16 @@ public class ProductServiceImpl implements ProductService{
 
 	@Override
 	public ProductDTO createProduct(ProductCreationRequest request) {
-		return mapper.map(productRepository.createProduct(
-				mapper.map(request, Product.class)
-		), ProductDTO.class);
+		Product product = mapper.map(request, Product.class);
+		for(String url : request.getImageUrls()){
+			Image image = new Image();
+			image.setUrl(url);
+			image.setProduct(product);
+			product.getImages().add(image);
+		}
+		product = productRepository.save(product);
+		ProductDTO productDTO = mapper.map(product, ProductDTO.class);
+		return productDTO;
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package application.converter;
 
 import application.common.OrderEnum;
 import application.model.request.OrderSearchRequest;
-import application.utils.MapUtil;
+import application.util.MapUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

@@ -1,0 +1,94 @@
+:root {
+    --bgcolor1: #D70018;
+    --bgcolor2: #EF4444;
+    --bgcolor3: #FCA5A5;
+    --text-color1: #fff;
+    --text-color2: #000
+}
+.my-btn{
+    background-color: #D70018;
+}
+.my-btn:hover{
+    background-color: var(--bgcolor2);
+}
+body {
+    font-family: "Roboto", serif;
+    font-weight: 350;
+    font-style: normal;
+    color: var(--text-color1);
+}
+.header{
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    align-items: center;
+    background-color: var(--bgcolor1);
+}
+.header .logo-title{
+    color: var(--text-color1);
+}
+.search-header input{
+    width: 300px;
+    padding: 10px;
+    border-radius: 10px;
+}
+.header-item{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.header .item{
+    height: 50px;
+    padding: 5px;
+    max-height: 50px;
+}
+.header .item:hover{
+    background-color: var(--bgcolor2);
+    border-radius: 10px;
+}
+.header .contact{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+.header .contact p{
+    margin-bottom: 0;
+}
+.header .cart{
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.header .login-btn{
+    cursor: pointer;
+    background-color: var(--bgcolor2);
+    text-align: center;
+    width: 100px;
+    border-radius: 10px;
+}
+.body{
+    margin-top: 50px;
+    max-width: 80%;
+    margin-inline: auto;
+}
+.category{
+    display: flex;
+    background-color: var(--bgcolor3);
+    padding: 10px;
+    border-radius: 10px;
+    gap: 20px;
+}
+.category-item{
+    padding: 10px;
+}
+.category-item a{
+    color: var(--text-color1);
+    font-weight: 700;
+    padding: 10px;
+}
+.category-item .active{
+    background-color: var(--bgcolor2);
+    border-radius: 10px;
+}
+

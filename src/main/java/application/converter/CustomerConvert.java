@@ -1,8 +1,7 @@
 package application.converter;
 
 import application.builder.CustomerSearchCriteria;
-import application.utils.MapUtil;
-import lombok.Data;
+import application.util.MapUtil;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

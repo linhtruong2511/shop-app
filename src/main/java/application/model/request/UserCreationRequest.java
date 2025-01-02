@@ -2,6 +2,7 @@ package application.model.request;
 
 import application.entity.Role;
 import application.entity.User;
+import application.model.dto.UserI;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.support.MessageSourceSupport;
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserCreationRequest {
+public class UserCreationRequest implements UserI {
     @Size(min = 4, message = "USERNAME_INVALID")
     String username;
 
@@ -41,5 +42,4 @@ public class UserCreationRequest {
     LocalDate dod;
     String address;
     String phoneNumber;
-    List<Long> roleID = Collections.emptyList();
 }
