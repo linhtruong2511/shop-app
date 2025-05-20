@@ -16,15 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthAPI {
     @Autowired
     AuthService authService;
+
     @PostMapping("sign-up")
-    APIResponse<UserDTO> signUp(@RequestBody SignUpUserRequest request){
+    APIResponse<UserDTO> signUp(@RequestBody SignUpUserRequest request) {
         UserDTO userDTO = authService.signUp(request);
         return APIResponse.<UserDTO>builder()
                 .result(userDTO)
                 .build();
     }
+
     @PostMapping("sign-in")
-    APIResponse<String> login(@RequestBody LoginUserRequest request){
+    APIResponse<String> login(@RequestBody LoginUserRequest request) {
         String token = authService.login(request);
         return APIResponse.<String>builder()
                 .result(token)
